@@ -1,6 +1,6 @@
 ---
 name: maintain-php
-description: Perform an explicitly requested Composer maintenance update in a local DDEV PHP project, with before/after security audits, package changes, and a maintenance report. Not for deployment or database migrations.
+description: Perform an explicitly requested Composer maintenance update in a local PHP project driven by a justfile, with before/after security audits, package changes, and a maintenance report. Not for deployment or database migrations.
 ---
 
 # PHP maintenance
@@ -8,22 +8,22 @@ description: Perform an explicitly requested Composer maintenance update in a lo
 ## Scope and preflight
 
 - Confirm this is an authorized local maintenance update, not a production environment or a report-only request.
-- Verify the project root, `.ddev/config.yaml`, `composer.json`, and `composer.lock`. If missing, stop and report what is needed; do not initialize a new project.
+- Verify the project root, `justfile`, `composer.json`, and `composer.lock`. If missing, stop and report what is needed; do not initialize a new project.
+- Find the recipe that runs Composer in the project's PHP runtime, usually `composer *args`. Read it with `just --list` and `just --show <recipe>`. If no such recipe exists, stop and ask; do not fall back to a host `composer`, which reports on a different PHP runtime.
 - Inspect `git status --short` and the existing diff. Preserve unrelated work. If Composer files or files affected by scripts have uncommitted changes, ask before updating; do not stash, reset, or clean automatically.
-- Inspect Composer scripts, configured plugins, and DDEV start hooks before execution. If they deploy, migrate, delete data, or have unclear side effects outside maintenance, stop and ask. Do not silently disable project hooks or security policies.
+- Inspect Composer scripts, configured plugins, and every recipe you will run, including its dependencies and anything it calls. If they deploy, migrate, delete data, or have unclear side effects outside maintenance, stop and ask. Never run lifecycle recipes such as `init`, `rebuild`, `clean`, or `reset-db` as part of maintenance. Do not silently disable project hooks or security policies.
 - Capture the pre-update lockfile package versions and existing changes as baseline evidence. Use a private temporary directory only if artifacts are needed; do not copy credentials or authentication files.
 
 ## Execute sequentially
 
-Run each command separately and retain its output and exit status:
+Run each command separately and retain its output and exit status. Start services first only if the Composer recipe needs them and a start recipe (e.g. `just start`) does nothing beyond starting them:
 
 ```bash
-ddev start
-ddev composer --version
-ddev composer audit --locked --format=json
-ddev composer update --no-interaction
-ddev composer audit --locked --format=json
-ddev composer check-platform-reqs
+just composer --version
+just composer audit --locked --format=json
+just composer update --no-interaction
+just composer audit --locked --format=json
+just composer check-platform-reqs
 git status --short
 git diff --stat
 git diff -- composer.json composer.lock
@@ -35,7 +35,7 @@ git diff -- composer.json composer.lock
 - Keep project security policies enabled. Do not change version constraints, ignore advisories, bypass platform requirements, or force major upgrades to make the update pass.
 - Allowed changes are Composer-managed dependency files and expected generated/script output. Identify unexpected changes and ask before further mutation.
 - No commits, pushes, deployments, migrations, database operations, or application-code edits. Do not install new validation tools.
-- Run the project's documented, non-destructive maintenance checks when available. Dependency audit and platform checks do not prove the application works; report application checks not performed.
+- Run the project's documented, non-destructive maintenance checks when available, such as static analysis or lint recipes. Skip recipes that depend on database preparation or migrations (test suites often do) and list them as not performed. Dependency audit and platform checks do not prove the application works; report application checks not performed.
 
 ## Report
 

@@ -2,7 +2,7 @@
 
 Personal skills for Claude Code.
 
-Adapted from [marco-kretz/dotfiles](https://github.com/marco-kretz/dotfiles/tree/main/agents/.agents/skills) (commit `ff1aa9b`). Changes: dropped the Codex-only `agents/openai.yaml` files and added `disable-model-invocation: true` to `deslop`.
+Adapted from [marco-kretz/dotfiles](https://github.com/marco-kretz/dotfiles/tree/main/agents/.agents/skills) (commit `ff1aa9b`). Changes: dropped the Codex-only `agents/openai.yaml` files and added `disable-model-invocation: true` to `deslop`, and switched `maintain-php` from DDEV to `just` recipes.
 
 ## Install
 
