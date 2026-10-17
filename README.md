@@ -12,3 +12,8 @@ git clone git@github.com:m1rm/agent-skills.git ~/projects/agent-skills
 ```
 
 `install.sh` symlinks every skill directory into `~/.claude/skills/`, so `git pull` updates them. It refuses to replace an existing non-symlink entry.
+
+## Own skills
+
+- `upgrade-symfony`: upgrades Symfony from one version to another using the UPGRADE/CHANGELOG files, with a confirmed plan and atomic commits.
+- `fix-symfony-deprecations`: fixes Symfony deprecations from project code, using Symfony AI Mate when present.
