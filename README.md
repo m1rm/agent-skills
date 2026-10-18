@@ -17,3 +17,4 @@ git clone git@github.com:m1rm/agent-skills.git ~/projects/agent-skills
 
 - `upgrade-symfony`: upgrades Symfony from one version to another using the UPGRADE/CHANGELOG files, with a confirmed plan and atomic commits.
 - `fix-symfony-deprecations`: fixes Symfony deprecations from project code, using Symfony AI Mate when present.
+- `maintain-hugo`: updates a Hugo site's themes and modules (Hugo modules, submodules, vendored, npm), compares before/after builds and deprecations, checks Hugo version compatibility, and reports.
